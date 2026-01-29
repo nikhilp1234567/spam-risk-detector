@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { analyzeSpamRisk, AnalysisResult } from "./utils/spamAnalysis";
 
 type Platform = "reddit" | "facebook" | "email";
@@ -87,11 +88,17 @@ export default function Home() {
       <header className="shrink-0 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-xl z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-shill-orange rounded-lg flex items-center justify-center text-black font-bold text-xl">
-              
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden border">
+              <Image 
+                src="/spam-risk-detector/logo.png" 
+                alt="ShillGuard Logo" 
+                width={32} 
+                height={32} 
+                className="object-cover"
+              />
             </div>
             <span className="font-bold text-xl tracking-tight text-white">spam risk detector</span>
-            <span className="hidden sm:inline-block bg-zinc-800 text-xs px-2 py-0.5 rounded text-zinc-400 border border-zinc-700">
+            <span className="hidden sm:inline-block bg-black text-xs px-2 py-0.5 rounded-xl text-white border-gray-800 border">
               Free Tool
             </span>
           </div>

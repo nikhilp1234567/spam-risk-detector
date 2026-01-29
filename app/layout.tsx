@@ -13,8 +13,37 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://shillguardapp.com"),
   title: "Shadowban Risk Rater - ShillGuard",
   description: "Free tool to check your Reddit, Facebook, or email content for spam triggers and shadowban risk. Powered by ShillGuard.",
+  alternates: {
+    canonical: "https://shillguardapp.com/spam-risk-detector",
+  },
+  icons: {
+    icon: "/spam-risk-detector/logo.png",
+  },
+  openGraph: {
+    title: "Shadowban Risk Rater - ShillGuard",
+    description: "Free tool to check your Reddit, Facebook, or email content for spam triggers and shadowban risk. Powered by ShillGuard.",
+    url: "https://shillguardapp.com/spam-risk-detector",
+    siteName: "ShillGuard",
+    images: [
+      {
+        url: "/spam-risk-detector/logo.png",
+        width: 800,
+        height: 600,
+        alt: "ShillGuard Logo",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Shadowban Risk Rater - ShillGuard",
+    description: "Free tool to check your Reddit, Facebook, or email content for spam triggers and shadowban risk. Powered by ShillGuard.",
+    images: ["/spam-risk-detector/logo.png"],
+  },
 };
 
 export default function RootLayout({
