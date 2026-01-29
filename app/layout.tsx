@@ -19,9 +19,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://shillguardapp.com/spam-risk-detector",
   },
-  icons: {
-    icon: "/spam-risk-detector/logo.png",
-  },
   openGraph: {
     title: "Shadowban Risk Rater - ShillGuard",
     description: "Free tool to check your Reddit, Facebook, or email content for spam triggers and shadowban risk. Powered by ShillGuard.",
