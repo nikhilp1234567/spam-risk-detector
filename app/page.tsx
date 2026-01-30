@@ -80,15 +80,19 @@ export default function Home() {
   };
 
   return (
-    // Added subtle orange ambient light to background
-    <div className="h-screen bg-zinc-950 selection:bg-shill-orange selection:text-white flex flex-col relative overflow-hidden">
-       <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-shill-orange/5 blur-[120px] rounded-full pointer-events-none"></div>
+    // ROOT CONTAINER: 
+    // - Mobile/Tablet: min-h-screen (allows scrolling), standard block layout
+    // - Desktop (lg+): h-screen (fixed app view), overflow-hidden (internal scrolling)
+    <div className="min-h-screen lg:h-screen bg-zinc-950 selection:bg-shill-orange selection:text-white flex flex-col relative lg:overflow-hidden">
+       
+       {/* Ambient Background - Fixed position to stay consistent during scroll */}
+       <div className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] bg-shill-orange/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
       
       {/* Navbar */}
-      <header className="shrink-0 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-xl z-50">
+      <header className="shrink-0 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-xl z-50 sticky top-0 lg:static">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden border">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden border border-zinc-700/50 shrink-0">
               <Image 
                 src="/spam-risk-detector/logo.png" 
                 alt="ShillGuard Logo" 
@@ -97,32 +101,38 @@ export default function Home() {
                 className="object-cover"
               />
             </div>
-            <span className="font-bold text-xl tracking-tight text-white">spam risk detector</span>
+            {/* Truncate text on very small screens if needed, but flex-shrink usually handles it */}
+            <span className="font-bold text-lg sm:text-xl tracking-tight text-white truncate">spam risk detector</span>
             <span className="hidden sm:inline-block bg-black text-xs px-2 py-0.5 rounded-xl text-white border-gray-800 border">
               Free Tool
             </span>
           </div>
           <a
             href="https://shillguardapp.com"
-            className="bg-white text-black hover:bg-gray-200 px-4 py-2 rounded-full text-sm font-bold transition-all transform hover:scale-105"
+            className="bg-white text-black hover:bg-gray-200 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all transform hover:scale-105 shrink-0"
           >
             Get Extension
           </a>
         </div>
       </header>
 
-      <main className="flex-grow flex flex-col lg:flex-row max-w-7xl mx-auto w-full p-4 sm:p-6 gap-4 relative z-10 overflow-y-auto lg:overflow-visible">
+      {/* MAIN CONTENT AREA: 
+          - Mobile: Flex-col (stacks), natural height
+          - Desktop: Flex-row (side-by-side), constrained height to force internal scrolling
+      */}
+      <main className="flex-grow flex flex-col lg:flex-row max-w-7xl mx-auto w-full p-4 sm:p-6 gap-6 lg:gap-4 relative z-10 lg:h-[calc(100vh-3.5rem)]">
         
         {/* LEFT PANEL: Input & Drafting */}
-        <section className="flex-1 flex flex-col gap-3 min-h-0">
+        {/* Mobile: Standard block. Desktop: Flex col to fill height */}
+        <section className="flex-1 flex flex-col gap-3 min-h-0 w-full">
           
           {/* Platform Toggles */}
-          <div className="shrink-0 bg-zinc-900/80 border border-zinc-800 p-1 rounded-xl flex">
+          <div className="shrink-0 bg-zinc-900/80 border border-zinc-800 p-1 rounded-xl flex overflow-x-auto no-scrollbar">
             {(["reddit", "facebook", "email"] as Platform[]).map((p) => (
               <button
                 key={p}
                 onClick={() => setPlatform(p)}
-                className={`flex-1 py-2 text-sm font-medium rounded-lg capitalize transition-all ${
+                className={`flex-1 py-2 text-xs sm:text-sm font-medium rounded-lg capitalize transition-all whitespace-nowrap px-2 ${
                   platform === p
                     ? "bg-zinc-800 text-white shadow-sm ring-1 ring-zinc-700"
                     : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50"
@@ -133,8 +143,9 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Editor Card - Changed to rounded-2xl to match closer fit */}
-          <div className="flex-grow bg-zinc-900 border border-zinc-800 rounded-2xl p-4 sm:p-6 flex flex-col gap-3 shadow-2xl min-h-0">
+          {/* Editor Card */}
+          {/* Desktop: Flex-grow to fill vertical space. Mobile: Auto height. */}
+          <div className="flex-grow bg-zinc-900 border border-zinc-800 rounded-2xl p-4 sm:p-6 flex flex-col gap-3 shadow-2xl min-h-0 lg:overflow-hidden">
             
             {/* --- Reddit Specific Inputs --- */}
             {platform === "reddit" && (
@@ -147,14 +158,14 @@ export default function Home() {
             {/* --- Email Specific Inputs --- */}
             {platform === "email" && (
                 <div className="shrink-0 flex flex-col gap-2 mb-1 p-3 bg-zinc-950/50 border border-zinc-800 rounded-xl">
-                    <div className="flex items-center">
-                        <span className="text-zinc-500 w-16 text-sm">From:</span>
-                        <input type="email" placeholder="sender@yourdomain.com" value={fromEmail} onChange={(e) => setFromEmail(e.target.value)} className="bg-transparent border-none text-sm text-zinc-300 placeholder-zinc-600 focus:ring-0 outline-none flex-1" />
+                    <div className="flex items-center gap-2">
+                        <span className="text-zinc-500 w-12 sm:w-16 text-sm shrink-0">From:</span>
+                        <input type="email" placeholder="sender@yourdomain.com" value={fromEmail} onChange={(e) => setFromEmail(e.target.value)} className="bg-transparent border-none text-sm text-zinc-300 placeholder-zinc-600 focus:ring-0 outline-none flex-1 min-w-0" />
                     </div>
                     <div className="h-px bg-zinc-800 w-full" />
-                    <div className="flex items-center">
-                        <span className="text-zinc-500 w-16 text-sm">To:</span>
-                        <input type="email" placeholder="prospect@company.com" value={toEmail} onChange={(e) => setToEmail(e.target.value)} className="bg-transparent border-none text-sm text-zinc-300 placeholder-zinc-600 focus:ring-0 outline-none flex-1" />
+                    <div className="flex items-center gap-2">
+                        <span className="text-zinc-500 w-12 sm:w-16 text-sm shrink-0">To:</span>
+                        <input type="email" placeholder="prospect@company.com" value={toEmail} onChange={(e) => setToEmail(e.target.value)} className="bg-transparent border-none text-sm text-zinc-300 placeholder-zinc-600 focus:ring-0 outline-none flex-1 min-w-0" />
                     </div>
                 </div>
             )}
@@ -167,7 +178,7 @@ export default function Home() {
                 placeholder={platform === "reddit" ? "Post Title" : "Subject Line"}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="shrink-0 bg-transparent text-xl font-bold text-white placeholder-zinc-600 border-none focus:ring-0 p-0 w-full outline-none"
+                className="shrink-0 bg-transparent text-lg sm:text-xl font-bold text-white placeholder-zinc-600 border-none focus:ring-0 p-0 w-full outline-none"
               />
             )}
             
@@ -176,6 +187,7 @@ export default function Home() {
             )}
 
             {/* --- Main Body Textarea --- */}
+            {/* Mobile: resize-y allows users to adjust height. Desktop: resize-none keeps layout clean. */}
             <textarea
               placeholder={
                 platform === "facebook" 
@@ -186,15 +198,15 @@ export default function Home() {
               }
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="flex-grow w-full bg-transparent resize-none outline-none text-zinc-300 placeholder-zinc-600 text-lg leading-relaxed min-h-[150px]"
+              className="flex-grow w-full bg-transparent outline-none text-zinc-300 placeholder-zinc-600 text-base sm:text-lg leading-relaxed min-h-[200px] lg:min-h-[150px] resize-y lg:resize-none"
             />
 
             <div className="shrink-0 flex justify-between items-center pt-3 text-xs text-zinc-500 border-t border-zinc-800">
               <span>{content.length} characters</span>
-              {/* Mobile Manual Analyze Button */}
+              {/* Mobile Manual Analyze Button - Always visible on mobile */}
               <button 
                 onClick={handleAnalyze}
-                className="lg:hidden flex items-center gap-1 text-shill-orange font-bold uppercase tracking-wider"
+                className="lg:hidden flex items-center gap-2 bg-zinc-800/50 px-3 py-1.5 rounded-lg text-shill-orange font-bold uppercase tracking-wider hover:bg-zinc-800 transition-colors"
               >
                 Analyze <span className={isAnalyzing ? "animate-spin" : ""}>⚡️</span>
               </button>
@@ -203,11 +215,12 @@ export default function Home() {
         </section>
 
         {/* RIGHT PANEL: Risk Analysis & CTA */}
-        <section className="w-full lg:w-[400px] flex flex-col gap-4 shrink-0">
+        {/* Mobile: W-full, stacks below. Desktop: Fixed width, full height scrolling. */}
+        <section className="w-full lg:w-[400px] flex flex-col gap-4 shrink-0 lg:h-full lg:overflow-y-auto no-scrollbar pb-6 lg:pb-0">
           
-          {/* Main Score Card - Rounded 2xl */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 relative overflow-hidden shadow-2xl">
-             {/* Background Glow Effect - Made slightly stronger orange */}
+          {/* Main Score Card */}
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 relative overflow-hidden shadow-2xl shrink-0">
+             {/* Background Glow Effect */}
              <div className={`absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-shill-orange/20 to-transparent blur-3xl rounded-full pointer-events-none transition-opacity duration-500 ${result && result.score > 0 ? 'opacity-100' : 'opacity-0'}`} />
 
             <div className="relative z-10">
@@ -232,12 +245,12 @@ export default function Home() {
               <div className="w-full bg-zinc-950 border border-zinc-800 h-2.5 rounded-full overflow-hidden mb-6 p-0.5">
                 <div 
                   className={`h-full rounded-full transition-all duration-1000 ease-out ${result?.score && result.score >= 60 ? "bg-shill-orange shadow-[0_0_10px_rgba(255,68,0,0.5)]" : result?.score && result.score >= 20 ? "bg-yellow-500" : "bg-emerald-500"}`}
-                  style={{ width: `${result ? Math.max(result.score, 2) : 2}%` }} // Min width 2% so it's visible
+                  style={{ width: `${result ? Math.max(result.score, 2) : 2}%` }} 
                 />
               </div>
 
               {/* Status Message Area */}
-              <div className="bg-zinc-950/80 rounded-xl p-4 border border-zinc-800/80 min-h-[100px] lg:min-h-[120px] overflow-y-auto max-h-[150px]">
+              <div className="bg-zinc-950/80 rounded-xl p-4 border border-zinc-800/80 min-h-[100px] lg:min-h-[120px] overflow-y-auto max-h-[150px] custom-scrollbar">
                 {(!result || result.reasons.length === 0) ? (
                   <div className="flex items-center gap-3 text-zinc-500 h-full">
                     <svg className="w-5 h-5 opacity-50 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -262,11 +275,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* CTA Card - Adjusted for compact fit */}
-          <div className="bg-gradient-to-br from-shill-orange to-orange-600 rounded-2xl py-6 px-6 text-white relative overflow-hidden group shadow-xl shadow-shill-orange/20 flex-grow flex flex-col justify-center">
+          {/* CTA Card */}
+          <div className="bg-gradient-to-br from-shill-orange to-orange-600 rounded-2xl py-6 px-6 text-white relative overflow-hidden group shadow-xl shadow-shill-orange/20 flex-grow lg:flex-grow-0 min-h-[200px] flex flex-col justify-center">
             <div className="relative z-10 flex flex-col items-start">
-              <h3 className="font-black text-4xl mb-2 tracking-tight">Market safely forever.</h3>
-              <p className="text-white/90 text-xl mb-4 leading-relaxed">
+              <h3 className="font-black text-3xl sm:text-4xl mb-2 tracking-tight">Market safely forever.</h3>
+              <p className="text-white/90 text-lg sm:text-xl mb-4 leading-relaxed">
                 ShillGuard checks your posts in real-time on Reddit, gmail & Facebook. </p>
               <a 
                 href="https://shillguardapp.com"
@@ -283,7 +296,7 @@ export default function Home() {
           </div>
           
           {/* Bottom Links */}
-          <div className="text-center text-zinc-600 text-[10px] uppercase tracking-widest space-x-6 mt-2 font-medium shrink-0">
+          <div className="text-center text-zinc-600 text-[10px] uppercase tracking-widest flex flex-wrap justify-center gap-4 sm:gap-6 mt-2 font-medium shrink-0 pb-6 lg:pb-0">
             <a href="https://shillguardapp.com/privacy" className="hover:text-shill-orange transition-colors">Privacy</a>
             <a href="https://shillguardapp.com/terms" className="hover:text-shill-orange transition-colors">Terms</a>
             <a href="https://twitter.com/scientificsaas" target="_blank" rel="noopener noreferrer" className="hover:text-shill-orange transition-colors">
