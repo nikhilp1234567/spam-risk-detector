@@ -85,8 +85,13 @@ export default function Home() {
     // - Desktop (lg+): h-screen (fixed app view), overflow-hidden (internal scrolling)
     <div className="min-h-screen lg:h-screen bg-zinc-950 selection:bg-shill-orange selection:text-white flex flex-col relative lg:overflow-hidden">
        
-       {/* Ambient Background - Fixed position to stay consistent during scroll */}
-       <div className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] bg-shill-orange/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
+       {/* Ambient Background - Optimized with radial-gradient instead of heavy blur */}
+       <div 
+         className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] pointer-events-none z-0"
+         style={{
+           background: 'radial-gradient(circle, rgba(255, 68, 0, 0.08) 0%, transparent 70%)'
+         }}
+       />
       
       {/* Navbar */}
       <header className="shrink-0 border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-xl z-50 sticky top-0 lg:static">
